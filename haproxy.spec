@@ -53,7 +53,10 @@ do setek instancji bez ryzykowania stabilno¶ci systemu.
 %setup -q
 
 %build
-%{__make}
+%{__make} \
+	DEBUG= \
+	CPU_OPTS="%{rpmcflags}" \
+	LDFLAGS="%{rpmldflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
