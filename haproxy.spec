@@ -1,12 +1,12 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.1.24
+Version:	1.1.31
 Release:	0.1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://w.ods.org/tools/haproxy/%{name}-%{version}.tar.gz
-# Source0-md5:	3ddd10a8bf6e415eaa32851c39c2b67c
+# Source0-md5:	c814ac4a670f07d5f5c374c355dd807c
 Source1:	%{name}.cfg
 Source2:	%{name}.init
 URL:		http://w.ods.org/tools/haproxy/
@@ -60,9 +60,9 @@ do setek instancji bez ryzykowania stabilno¶ci systemu.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d}
 
-install haproxy $RPM_BUILD_ROOT%{_bindir}
+install haproxy $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 
@@ -86,7 +86,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG examples/* doc/*
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_sbindir}/*
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
