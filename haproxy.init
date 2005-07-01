@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# haproxy	This shell script takes care of starting and stopping
+#		haproxy.
+#
+# chkconfig:	345 80 30
+#
+# description:	haproxy - high-performance TCP/HTTP load balancer
+#
+# processname:	haproxy
+# pidfile:	/var/run/haproxy.pid
+# config:	/etc/haproxy/haproxy.cfg
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Get service config
+[ -f /etc/sysconfig/haproxy ] && . /etc/sysconfig/haproxy
+
+# Check that networking is up.
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
+		msg_network_down haproxy
+		exit 1
+	fi
+else
+	exit 0
+fi
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/haproxy ]; then
+		msg_starting haproxy
+		daemon haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/haproxy
+	else
+		msg_already_running haproxy
+	fi
+	;;
+  stop)
+	# Stop daemons.
+	if [ -f /var/lock/subsys/haproxy ]; then
+		msg_stopping haproxy
+		killproc --pidfile /var/run/haproxy.pid haproxy
+		rm -f /var/lock/subsys/haproxy
+	else
+		msg_not_running haproxy
+	fi
+	;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+	exit $?
+	;;
+  status)
+	status haproxy
+	exit $?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL
