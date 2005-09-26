@@ -1,12 +1,12 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.1.31
+Version:	1.1.32
 Release:	0.1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://w.ods.org/tools/haproxy/%{name}-%{version}.tar.gz
-# Source0-md5:	c814ac4a670f07d5f5c374c355dd807c
+# Source0-md5:	300a5c6294f577e3ef68d17caf8277d0
 Source1:	%{name}.cfg
 Source2:	%{name}.init
 URL:		http://w.ods.org/tools/haproxy/
@@ -88,5 +88,5 @@ fi
 %doc CHANGELOG examples/* doc/*
 %attr(755,root,root) %{_sbindir}/*
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
