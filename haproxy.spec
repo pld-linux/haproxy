@@ -5,7 +5,7 @@ Version:	1.2.15
 Release:	0.1
 License:	GPL v2
 Group:		Networking/Daemons
-Source0:	http://haproxy.1wt.eu/download/1.2/src/haproxy-1.2.15.tar.gz
+Source0:	http://haproxy.1wt.eu/download/1.2/src/%{name}-%{version}.tar.gz
 # Source0-md5:	7461a3deeda099a6ee190f99e9763fea
 #Source1:	%{name}.cfg
 Source2:	%{name}.init
