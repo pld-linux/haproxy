@@ -1,5 +1,5 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
-Summary(pl):	haproxy - wysoko wydajny load balancer TCP/HTTP
+Summary(pl.UTF-8):   haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
 Version:	1.2.16
 Release:	0.1
@@ -32,23 +32,23 @@ It needs very little resource. Its event-driven architecture allows it
 to easily handle thousands of simultaneous connections on hundreds of
 instances without risking the system's stability.
 
-%description -l pl
-HA-Proxy to odwrotne proxy TCP/HTTP przeznaczone w szczególno¶ci dla
-¶rodowisk o wysokiej dostêpno¶ci. W rzeczywisto¶ci mo¿e:
-- przekazywaæ ¿±dania HTTP w zale¿no¶ci od statycznie przypisanych
+%description -l pl.UTF-8
+HA-Proxy to odwrotne proxy TCP/HTTP przeznaczone w szczegÃ³lnoÅ›ci dla
+Å›rodowisk o wysokiej dostÄ™pnoÅ›ci. W rzeczywistoÅ›ci moÅ¼e:
+- przekazywaÄ‡ Å¼Ä…dania HTTP w zaleÅ¼noÅ›ci od statycznie przypisanych
   ciasteczek;
-- rozdzielaæ obci±¿enie miêdzy ró¿ne serwery zapewniaj±c ci±g³o¶æ
-  ³±czno¶ci z serwerem poprzez u¿ycie ciasteczek HTTP;
-- prze³±czaæ na serwery zapasowe w przypadku, gdy g³ówny zawiedzie;
-- przyjmowaæ po³±czenia na specjalne porty przeznaczone do
-  monitorowania us³ug;
-- zaprzestaæ przyjmowania po³±czeñ bez zrywania istniej±cych;
-- dodawaæ/modyfikowaæ/usuwaæ nag³ówki HTTP w obie strony;
-- blokowaæ ¿±dania pasuj±ce do okre¶lonego wzorca.
+- rozdzielaÄ‡ obciÄ…Å¼enie miÄ™dzy rÃ³Å¼ne serwery zapewniajÄ…c ciÄ…gÅ‚oÅ›Ä‡
+  Å‚Ä…cznoÅ›ci z serwerem poprzez uÅ¼ycie ciasteczek HTTP;
+- przeÅ‚Ä…czaÄ‡ na serwery zapasowe w przypadku, gdy gÅ‚Ã³wny zawiedzie;
+- przyjmowaÄ‡ poÅ‚Ä…czenia na specjalne porty przeznaczone do
+  monitorowania usÅ‚ug;
+- zaprzestaÄ‡ przyjmowania poÅ‚Ä…czeÅ„ bez zrywania istniejÄ…cych;
+- dodawaÄ‡/modyfikowaÄ‡/usuwaÄ‡ nagÅ‚Ã³wki HTTP w obie strony;
+- blokowaÄ‡ Å¼Ä…dania pasujÄ…ce do okreÅ›lonego wzorca.
 
-Wymaga bardzo niewiele zasobów. Jego sterowana zdarzeniami
-architektura pozwala ³atwo obs³ugiwaæ tysi±ce jednoczesnych po³±czeñ
-do setek instancji bez ryzykowania stabilno¶ci systemu.
+Wymaga bardzo niewiele zasobÃ³w. Jego sterowana zdarzeniami
+architektura pozwala Å‚atwo obsÅ‚ugiwaÄ‡ tysiÄ…ce jednoczesnych poÅ‚Ä…czeÅ„
+do setek instancji bez ryzykowania stabilnoÅ›ci systemu.
 
 %prep
 %setup -q
