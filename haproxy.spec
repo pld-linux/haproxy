@@ -1,8 +1,10 @@
+%define         _vimdatadir     %{_datadir}/vim/vimfiles
+
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
 Version:	1.3.8.2
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
 #Source0:	http://haproxy.1wt.eu/download/1.2/src/%{name}-%{version}.tar.gz
@@ -51,6 +53,21 @@ Wymaga bardzo niewiele zasobów. Jego sterowana zdarzeniami
 architektura pozwala łatwo obsługiwać tysiące jednoczesnych połączeń
 do setek instancji bez ryzykowania stabilności systemu.
 
+%package -n vim-syntax-haproxy
+Summary:	Vim syntax: haproxy configuration files syntax
+Summary(pl.UTF-8):	Opis składni dla Vima: podświetlanie składni dla plików konfiguracyjnych haproxy
+Group:		Applications/Editors/Vim
+# for _vimdatadir existence
+Requires:	vim >= 4:6.3.058-3
+
+%description -n vim-syntax-haproxy
+This plugin provides syntax highlighting for haproxy configuration
+files.
+
+%description -l pl.UTF-8  -n vim-syntax-haproxy
+Ta wtyczka dostarcza podświetlanie składni dla plików konfiguracyjnych
+haproxy.
+
 %prep
 %setup -q
 
@@ -63,14 +80,16 @@ do setek instancji bez ryzykowania stabilności systemu.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d} \
+	$RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 install haproxy $RPM_BUILD_ROOT%{_sbindir}
 #install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install examples/haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 # Some small cleanups:
-rm -f doc/gpl.txt
+rm -f doc/gpl.txt examples/haproxy.vim
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -92,3 +111,7 @@ fi
 %dir %{_sysconfdir}/%{name}
 #%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
+
+%files -n vim-syntax-haproxy
+%defattr(644,root,root,755)
+%{_vimdatadir}/syntax/*
