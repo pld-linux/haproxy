@@ -4,10 +4,9 @@ Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
 Version:	1.3.8.2
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Networking/Daemons
-#Source0:	http://haproxy.1wt.eu/download/1.2/src/%{name}-%{version}.tar.gz
 Source0:	http://haproxy.1wt.eu/download/1.3/src/%{name}-%{version}.tar.gz
 # Source0-md5:	a32f9095f314f603d771f24b259778e7
 #Source1:	%{name}.cfg
@@ -17,6 +16,7 @@ BuildRequires:	pcre-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
 Requires:	rc-scripts
+Requires:	uname(release) >= 2.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -73,10 +73,12 @@ haproxy.
 
 %build
 %{__make} \
-	DEBUG= \
+	TARGET=linux26 \
+	REGEX=pcre \
 	CC="%{__cc}" \
 	CPU_OPTS="%{rpmcflags}" \
-	LDFLAGS="%{rpmldflags}"
+	LDFLAGS="%{rpmldflags}" \
+	DEBUG=
 
 %install
 rm -rf $RPM_BUILD_ROOT
