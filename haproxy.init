@@ -30,11 +30,7 @@ else
 	exit 0
 fi
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-  start)
-	# Check if the service is already running?
+start() {
 	if [ ! -f /var/lock/subsys/haproxy ]; then
 		msg_starting haproxy
 		daemon haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
@@ -43,9 +39,9 @@ case "$1" in
 	else
 		msg_already_running haproxy
 	fi
-	;;
-  stop)
-	# Stop daemons.
+}
+
+stop() {
 	if [ -f /var/lock/subsys/haproxy ]; then
 		msg_stopping haproxy
 		killproc --pidfile /var/run/haproxy.pid haproxy
@@ -53,11 +49,20 @@ case "$1" in
 	else
 		msg_not_running haproxy
 	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   restart|force-reload)
-	$0 stop
-	$0 start
-	exit $?
+	stop
+	start
 	;;
   status)
 	status haproxy
