@@ -3,14 +3,13 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.3.8.2
-Release:	2
+Version:	1.3.9
+Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://haproxy.1wt.eu/download/1.3/src/%{name}-%{version}.tar.gz
-# Source0-md5:	a32f9095f314f603d771f24b259778e7
-#Source1:	%{name}.cfg
-Source2:	%{name}.init
+# Source0-md5:	20e28de8573b20fc28e0be41188ecb59
+Source1:	%{name}.init
 Patch0:		%{name}-vim.patch
 URL:		http://haproxy.1wt.eu/
 BuildRequires:	pcre-devel
@@ -88,8 +87,7 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d} 
 	$RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 install haproxy $RPM_BUILD_ROOT%{_sbindir}
-#install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install examples/haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 # Some small cleanups:
