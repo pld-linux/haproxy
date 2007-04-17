@@ -11,6 +11,7 @@ Source0:	http://haproxy.1wt.eu/download/1.3/src/%{name}-%{version}.tar.gz
 # Source0-md5:	a32f9095f314f603d771f24b259778e7
 #Source1:	%{name}.cfg
 Source2:	%{name}.init
+Patch0:		%{name}-vim.patch
 URL:		http://haproxy.1wt.eu/
 BuildRequires:	pcre-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -70,6 +71,7 @@ haproxy.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__make} \
