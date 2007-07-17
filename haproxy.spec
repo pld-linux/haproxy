@@ -26,6 +26,7 @@ Requires:	rc-scripts
 Requires:	uname(release) >= 2.6
 Provides:	group(haproxy)
 Provides:	user(haproxy)
+Conflicts:	rpm < 4.4.2-45
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
