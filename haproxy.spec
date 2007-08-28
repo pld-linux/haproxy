@@ -4,19 +4,27 @@ Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
 Version:	1.3.12
-Release:	1
+Release:	3
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://haproxy.1wt.eu/download/1.3/src/%{name}-%{version}.tar.gz
 # Source0-md5:	cdff6845362b29f9b2be4c207aa1fbb1
 Source1:	%{name}.init
+Source2:	%{name}.cfg
 Patch0:		%{name}-vim.patch
 URL:		http://haproxy.1wt.eu/
 BuildRequires:	pcre-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
 Requires:	rc-scripts
-Requires:	uname(release) >= 2.6
+Provides:	group(haproxy)
+Provides:	user(haproxy)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -72,6 +80,8 @@ haproxy.
 %setup -q
 %patch0 -p1
 
+cp -a examples/haproxy.vim .
+
 %build
 %{__make} \
 	TARGET=linux26 \
@@ -88,13 +98,18 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d} 
 
 install haproxy $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-install examples/haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
+install haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 # Some small cleanups:
 rm -f doc/gpl.txt examples/haproxy.vim
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%pre
+%groupadd -g 185 %{name}
+%useradd -u 185 -d /usr/share/empty -g %{name} -c "haproxy user" %{name}
 
 %post
 /sbin/chkconfig --add %{name}
@@ -106,14 +121,20 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del %{name}
 fi
 
+%postun
+if [ "$1" = "0" ]; then
+	%userremove %{name}
+	%groupremove %{name}
+fi
+
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG ROADMAP TODO examples/* doc/* tests
-%attr(755,root,root) %{_sbindir}/*
 %dir %{_sysconfdir}/%{name}
-#%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/haproxy.cfg
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
+%attr(755,root,root) %{_sbindir}/haproxy
 
 %files -n vim-syntax-haproxy
 %defattr(644,root,root,755)
-%{_vimdatadir}/syntax/*
+%{_vimdatadir}/syntax/haproxy.vim
