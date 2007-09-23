@@ -3,15 +3,14 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.3.12
-Release:	2
+Version:	1.3.12.2
+Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://haproxy.1wt.eu/download/1.3/src/%{name}-%{version}.tar.gz
-# Source0-md5:	cdff6845362b29f9b2be4c207aa1fbb1
+# Source0-md5:	d299484c1bfcaacc360ee3adf2fb51ea
 Source1:	%{name}.init
 Source2:	%{name}.cfg
-Patch0:		%{name}-vim.patch
 URL:		http://haproxy.1wt.eu/
 BuildRequires:	pcre-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -80,7 +79,6 @@ haproxy.
 
 %prep
 %setup -q
-%patch0 -p1
 
 cp -a examples/haproxy.vim .
 
