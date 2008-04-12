@@ -1,14 +1,12 @@
-%define         _vimdatadir     %{_datadir}/vim/vimfiles
-
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.3.14.1
+Version:	1.3.14.3
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://haproxy.1wt.eu/download/1.3/src/%{name}-%{version}.tar.gz
-# Source0-md5:	8f66c6f9864ffd82e8054d61b9a5b6e4
+# Source0-md5:	2cc8cb5861eb06b9681f1ada91f4f303
 Source1:	%{name}.init
 Source2:	%{name}.cfg
 URL:		http://haproxy.1wt.eu/
@@ -27,6 +25,8 @@ Provides:	group(haproxy)
 Provides:	user(haproxy)
 Conflicts:	rpm < 4.4.2-45
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_vimdatadir	%{_datadir}/vim/vimfiles
 
 %description
 HA-Proxy is a TCP/HTTP reverse proxy which is particularly suited for
@@ -73,7 +73,7 @@ Requires:	vim >= 4:6.3.058-3
 This plugin provides syntax highlighting for haproxy configuration
 files.
 
-%description -l pl.UTF-8  -n vim-syntax-haproxy
+%description -n vim-syntax-haproxy -l pl.UTF-8
 Ta wtyczka dostarcza podświetlanie składni dla plików konfiguracyjnych
 haproxy.
 
