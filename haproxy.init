@@ -37,7 +37,7 @@ checkconfig() {
 start() {
 	if [ ! -f /var/lock/subsys/haproxy ]; then
 		msg_starting haproxy
-		daemon haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
+		daemon /usr/sbin/haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/haproxy
 	else
@@ -73,7 +73,7 @@ case "$1" in
 	if [ -f /var/lock/subsys/haproxy ]; then
 		checkconfig
 		msg_reloading haproxy
-		daemon haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -st $(</var/run/haproxy.pid)
+		daemon /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -st $(</var/run/haproxy.pid)
 		RETVAL=$?
 	else
 		msg_not_running haproxy
