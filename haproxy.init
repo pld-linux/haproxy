@@ -23,7 +23,7 @@
 # Check that networking is up.
 if is_yes "${NETWORKING}"; then
 	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
-		msg_network_down haproxy
+		msg_network_down "HA-Proxy"
 		exit 1
 	fi
 else
@@ -35,24 +35,51 @@ checkconfig() {
 }
 
 start() {
-	if [ ! -f /var/lock/subsys/haproxy ]; then
-		msg_starting haproxy
-		daemon /usr/sbin/haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/haproxy
-	else
-		msg_already_running haproxy
+	if [ -f /var/lock/subsys/haproxy ]; then
+		msg_already_running "HA-Proxy"
+		return
 	fi
+
+	msg_starting "HA-Proxy"
+	daemon /usr/sbin/haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/haproxy
 }
 
 stop() {
-	if [ -f /var/lock/subsys/haproxy ]; then
-		msg_stopping haproxy
-		killproc --pidfile /var/run/haproxy.pid haproxy
-		rm -f /var/lock/subsys/haproxy
-	else
-		msg_not_running haproxy
+	if [ ! -f /var/lock/subsys/haproxy ]; then
+		msg_not_running "HA-Proxy"
+		return
 	fi
+
+	msg_stopping "HA-Proxy"
+	killproc --pidfile /var/run/haproxy.pid haproxy
+	rm -f /var/lock/subsys/haproxy
+}
+
+reload() {
+	if [ ! -f /var/lock/subsys/haproxy ]; then
+		msg_not_running "HA-Proxy"
+		RETVAL=7
+		return
+	fi
+
+	# TODO: check if pid is valid and start instead
+	checkconfig
+	msg_reloading "HA-Proxy"
+	daemon /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -st $(</var/run/haproxy.pid)
+	RETVAL=$?
+}
+
+condrestart() {
+	if [ ! -f /var/lock/subsys/haproxy ]; then
+		msg_not_running "HA-Proxy"
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
 }
 
 RETVAL=0
@@ -64,28 +91,23 @@ case "$1" in
   stop)
   	stop
 	;;
-  restart|force-reload)
+  restart)
 	checkconfig
 	stop
 	start
 	;;
-  reload)
-	if [ -f /var/lock/subsys/haproxy ]; then
-		checkconfig
-		msg_reloading haproxy
-		daemon /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -st $(</var/run/haproxy.pid)
-		RETVAL=$?
-	else
-		msg_not_running haproxy
-		exit 7
-	fi
+  try-restart)
+	condrestart 0
+	;;
+  reload|force-reload)
+  	reload
 	;;
   status)
 	status haproxy
 	exit $?
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|reload|try-restart|force-reload|status}"
 	exit 3
 esac
 
