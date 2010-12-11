@@ -1,7 +1,7 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.4.8
+Version:	1.4.9
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
