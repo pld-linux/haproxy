@@ -6,7 +6,7 @@ Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://haproxy.1wt.eu/download/1.4/src/%{name}-%{version}.tar.gz
-# Source0-md5:	2cbcc95b54c0d803edaa13e7b4aeec25
+# Source0-md5:	4f0638652d7800860838dc195da335d8
 Source1:	%{name}.init
 Source2:	%{name}.cfg
 URL:		http://haproxy.1wt.eu/
