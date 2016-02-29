@@ -1,15 +1,15 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.6.2
+Version:	1.6.3
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
-Source0:	http://haproxy.1wt.eu/download/1.6/src/%{name}-%{version}.tar.gz
-# Source0-md5:	d0ebd3d123191a8136e2e5eb8aaff039
+Source0:	http://www.haproxy.org/download/1.6/src/%{name}-%{version}.tar.gz
+# Source0-md5:	3362d1e268c78155c2474cb73e7f03f9
 Source1:	%{name}.init
 Source2:	%{name}.cfg
-URL:		http://haproxy.1wt.eu/
+URL:		http://www.haproxy.org/
 BuildRequires:	pcre-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
@@ -96,10 +96,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d} \
 	$RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
-install haproxy $RPM_BUILD_ROOT%{_sbindir}
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
-install haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
+install -p haproxy $RPM_BUILD_ROOT%{_sbindir}
+install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
+cp -p haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 # Some small cleanups:
 rm -f doc/gpl.txt examples/haproxy.vim
