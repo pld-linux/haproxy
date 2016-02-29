@@ -21,6 +21,7 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	rc-scripts
 Requires:	uname(release) >= 2.6
+Suggests:	vim-syntax-haproxy
 Provides:	group(haproxy)
 Provides:	user(haproxy)
 Conflicts:	rpm < 4.4.2-45
