@@ -1,3 +1,10 @@
+#
+# Conditional build:
+%bcond_with	lua		# LUA support
+%bcond_without	zlib		# zlib support
+%bcond_without	pcre		# pcre support
+%bcond_without	ssl		# SSL support
+
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
@@ -10,8 +17,10 @@ Source0:	http://www.haproxy.org/download/1.6/src/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.cfg
 URL:		http://www.haproxy.org/
-BuildRequires:	pcre-devel
+%{?with_pcre:BuildRequires:	pcre-devel}
+%{?with_ssl:BuildRequires:	openssl-devel}
 BuildRequires:	rpmbuild(macros) >= 1.268
+%{?with_zlib:BuildRequires:	zlib-devel}
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -84,13 +93,22 @@ haproxy.
 cp -a examples/haproxy.vim .
 
 %build
-%{__make} \
-	TARGET=linux26 \
-	REGEX=pcre \
+regparm_opts=
+%ifarch %{ix86} %{x8664}
+regparm_opts="USE_REGPARM=1"
+%endif
+
+%{__make} $regparm_opts \
+	TARGET="linux2628" \
+	CPU="generic" \
+	USE_LINUX_TPROXY=1 \
+	%{?with_lua:USE_LUA=1} \
+	%{?with_ssl:USE_OPENSSL=1} \
+	%{?with_pcre:USE_PCRE=1} \
+	%{?with_zlib:USE_ZLIB=1} \
 	CC="%{__cc}" \
-	CPU_OPTS="%{rpmcflags}" \
-	LDFLAGS="%{rpmldflags}" \
-	DEBUG=
+	ADDINC="%{rpmcflags}" \
+	ADDLIB="%{rpmldflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
