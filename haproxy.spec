@@ -1,3 +1,5 @@
+# TODO
+# - examples/seamless_reload.txt
 #
 # Conditional build:
 %bcond_with	lua		# LUA support
