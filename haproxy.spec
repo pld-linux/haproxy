@@ -158,7 +158,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGELOG ROADMAP examples/* doc/* tests
+%doc CHANGELOG README ROADMAP examples/* doc/* tests
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/haproxy.cfg
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
