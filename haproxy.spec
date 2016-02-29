@@ -90,7 +90,8 @@ haproxy.
 %prep
 %setup -q
 
-cp -a examples/haproxy.vim .
+mv examples/haproxy.vim .
+mv examples/errorfiles .
 
 %build
 regparm_opts=
@@ -120,7 +121,7 @@ regparm_opts="USE_REGPARM=1"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d} \
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},%{_datadir}/%{name},/etc/rc.d/init.d} \
 	$RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 install -p haproxy $RPM_BUILD_ROOT%{_sbindir}
@@ -129,6 +130,7 @@ install -p contrib/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
 cp -p haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
+cp -a errorfiles $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # Some small cleanups:
 rm -f doc/gpl.txt examples/haproxy.vim
@@ -158,13 +160,14 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGELOG README ROADMAP examples/* doc/* tests
+%doc CHANGELOG README README ROADMAP examples/* doc/* tests
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/haproxy.cfg
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/haproxy
 %attr(755,root,root) %{_sbindir}/halog
 %attr(755,root,root) %{_sbindir}/iprange
+%{_datadir}/%{name}
 
 %files -n vim-syntax-haproxy
 %defattr(644,root,root,755)
