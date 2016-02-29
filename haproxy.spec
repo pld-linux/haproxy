@@ -16,8 +16,10 @@ License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://www.haproxy.org/download/1.6/src/%{name}-%{version}.tar.gz
 # Source0-md5:	3362d1e268c78155c2474cb73e7f03f9
-Source1:	%{name}.init
-Source2:	%{name}.cfg
+Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
+# Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
+Source2:	%{name}.init
+Source3:	%{name}.cfg
 URL:		http://www.haproxy.org/
 %{?with_ssl:BuildRequires:	openssl-devel}
 %{?with_pcre:BuildRequires:	pcre-devel}
@@ -125,14 +127,15 @@ regparm_opts="USE_REGPARM=1"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},%{_datadir}/%{name},/etc/rc.d/init.d} \
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},%{_datadir}/%{name},%{_mandir}/man1,/etc/rc.d/init.d} \
 	$RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 install -p haproxy $RPM_BUILD_ROOT%{_sbindir}
 install -p contrib/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
 install -p contrib/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
-install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
+install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
 cp -p haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
 cp -a errorfiles $RPM_BUILD_ROOT%{_datadir}/%{name}
 
@@ -171,6 +174,7 @@ fi
 %attr(755,root,root) %{_sbindir}/haproxy
 %attr(755,root,root) %{_sbindir}/halog
 %attr(755,root,root) %{_sbindir}/iprange
+%{_mandir}/man1/halog.1*
 %{_datadir}/%{name}
 
 %files -n vim-syntax-haproxy
