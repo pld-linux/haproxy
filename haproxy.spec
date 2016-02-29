@@ -17,8 +17,8 @@ Source0:	http://www.haproxy.org/download/1.6/src/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.cfg
 URL:		http://www.haproxy.org/
-%{?with_pcre:BuildRequires:	pcre-devel}
 %{?with_ssl:BuildRequires:	openssl-devel}
+%{?with_pcre:BuildRequires:	pcre-devel}
 BuildRequires:	rpmbuild(macros) >= 1.268
 %{?with_zlib:BuildRequires:	zlib-devel}
 Requires(post,preun):	/sbin/chkconfig
@@ -110,12 +110,22 @@ regparm_opts="USE_REGPARM=1"
 	ADDINC="%{rpmcflags}" \
 	ADDLIB="%{rpmldflags}"
 
+%{__make} -C contrib/halog halog \
+	CC="%{__cc}" \
+	OPTIMIZE="%{optflags}"
+
+%{__make} -C contrib/iprange iprange \
+	CC="%{__cc}" \
+	OPTIMIZE="%{optflags}"
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},/etc/rc.d/init.d} \
 	$RPM_BUILD_ROOT%{_vimdatadir}/syntax
 
 install -p haproxy $RPM_BUILD_ROOT%{_sbindir}
+install -p contrib/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
+install -p contrib/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
 cp -p haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
@@ -153,6 +163,8 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/haproxy.cfg
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/haproxy
+%attr(755,root,root) %{_sbindir}/halog
+%attr(755,root,root) %{_sbindir}/iprange
 
 %files -n vim-syntax-haproxy
 %defattr(644,root,root,755)
