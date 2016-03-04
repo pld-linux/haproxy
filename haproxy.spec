@@ -20,6 +20,7 @@ Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
 Source2:	%{name}.init
 Source3:	%{name}.cfg
+Source4:	haproxy-ft.vim
 URL:		http://www.haproxy.org/
 %{?with_ssl:BuildRequires:	openssl-devel}
 %{?with_pcre:BuildRequires:	pcre-devel}
@@ -127,7 +128,7 @@ regparm_opts="USE_REGPARM=1"
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},%{_datadir}/%{name},%{_mandir}/man1,/etc/rc.d/init.d} \
-	$RPM_BUILD_ROOT%{_vimdatadir}/syntax
+	$RPM_BUILD_ROOT%{_vimdatadir}/{syntax,ftdetect}
 
 install -p haproxy $RPM_BUILD_ROOT%{_sbindir}
 install -p contrib/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
@@ -136,6 +137,7 @@ install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
 cp -p haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
+cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_vimdatadir}/ftdetect/haproxy.vim
 cp -a errorfiles $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 # Some small cleanups:
@@ -179,3 +181,4 @@ fi
 %files -n vim-syntax-haproxy
 %defattr(644,root,root,755)
 %{_vimdatadir}/syntax/haproxy.vim
+%{_vimdatadir}/ftdetect/haproxy.vim
