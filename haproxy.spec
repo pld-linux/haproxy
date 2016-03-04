@@ -108,7 +108,6 @@ regparm_opts="USE_REGPARM=1"
 %{__make} $regparm_opts \
 	TARGET="linux2628" \
 	CPU="generic" \
-	USE_LINUX_TPROXY=1 \
 	%{?with_lua:USE_LUA=1} \
 	%{?with_ssl:USE_OPENSSL=1} \
 	%{?with_pcre:USE_PCRE=1} \
