@@ -20,7 +20,7 @@ Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
 Source2:	%{name}.init
 Source3:	%{name}.cfg
-Source4:	haproxy-ft.vim
+Source4:	%{name}-ft.vim
 URL:		http://www.haproxy.org/
 %{?with_ssl:BuildRequires:	openssl-devel}
 %{?with_pcre:BuildRequires:	pcre-devel}
@@ -127,10 +127,14 @@ regparm_opts="USE_REGPARM=1"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_sysconfdir}/%{name},%{_datadir}/%{name},%{_mandir}/man1,/etc/rc.d/init.d} \
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name},%{_datadir}/%{name},/etc/rc.d/init.d} \
 	$RPM_BUILD_ROOT%{_vimdatadir}/{syntax,ftdetect}
 
-install -p haproxy $RPM_BUILD_ROOT%{_sbindir}
+%{__make} install-bin install-man \
+	TARGET="linux2628" \
+	PREFIX=%{_prefix} \
+	DESTDIR=$RPM_BUILD_ROOT \
+
 install -p contrib/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
 install -p contrib/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
@@ -172,10 +176,12 @@ fi
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/haproxy.cfg
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
-%attr(755,root,root) %{_sbindir}/haproxy
 %attr(755,root,root) %{_sbindir}/halog
+%attr(755,root,root) %{_sbindir}/haproxy
+%attr(755,root,root) %{_sbindir}/haproxy-systemd-wrapper
 %attr(755,root,root) %{_sbindir}/iprange
 %{_mandir}/man1/halog.1*
+%{_mandir}/man1/haproxy.1*
 %{_datadir}/%{name}
 
 %files -n vim-syntax-haproxy
