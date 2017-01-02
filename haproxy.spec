@@ -2,7 +2,7 @@
 # - examples/seamless_reload.txt
 #
 # Conditional build:
-%bcond_with	lua		# LUA support
+%bcond_without	lua		# LUA support
 %bcond_without	zlib		# zlib support
 %bcond_without	pcre		# pcre support
 %bcond_without	ssl		# SSL support
@@ -11,7 +11,7 @@ Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
 Version:	1.7.1
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://www.haproxy.org/download/1.7/src/%{name}-%{version}.tar.gz
@@ -22,6 +22,7 @@ Source2:	%{name}.init
 Source3:	%{name}.cfg
 Source4:	%{name}-ft.vim
 URL:		http://www.haproxy.org/
+%{?with_lua:BuildRequires:  lua53-devel}
 %{?with_ssl:BuildRequires:	openssl-devel}
 %{?with_pcre:BuildRequires:	pcre-devel}
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -109,7 +110,7 @@ regparm_opts="USE_REGPARM=1"
 %{__make} $regparm_opts \
 	TARGET="linux2628" \
 	CPU="generic" \
-	%{?with_lua:USE_LUA=1} \
+	%{?with_lua:USE_LUA=1 LUA_LIB_NAME=lua5.3 LUA_INC=%{_includedir}/lua5.3} \
 	%{?with_ssl:USE_OPENSSL=1} \
 	%{?with_pcre:USE_PCRE=1} \
 	%{?with_zlib:USE_ZLIB=1} \
