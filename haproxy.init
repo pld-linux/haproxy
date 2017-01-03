@@ -61,7 +61,6 @@ reload() {
 		return
 	fi
 
-	# TODO: check if pid is valid and start instead
 	checkconfig
 	msg_reloading "HA-Proxy"
 	daemon /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -st $(</var/run/haproxy.pid)
