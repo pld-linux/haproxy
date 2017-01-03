@@ -27,6 +27,8 @@ else
 	exit 0
 fi
 
+pidfile="/var/run/haproxy.pid"
+
 # configtest itself
 # must return non-zero if check failed
 # output is discarded if checkconfig is ran without details
@@ -71,7 +73,7 @@ start() {
 	fi
 
 	msg_starting "HA-Proxy"
-	daemon /usr/sbin/haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid
+	daemon /usr/sbin/haproxy -D -f /etc/haproxy/haproxy.cfg -p $pidfile
 	RETVAL=$?
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/haproxy
 }
@@ -83,11 +85,12 @@ stop() {
 	fi
 
 	msg_stopping "HA-Proxy"
-	killproc --pidfile /var/run/haproxy.pid haproxy
+	killproc --pidfile $pidfile haproxy
 	rm -f /var/lock/subsys/haproxy
 }
 
 reload() {
+	local pid
 	if [ ! -f /var/lock/subsys/haproxy ]; then
 		msg_not_running "HA-Proxy"
 		RETVAL=7
@@ -96,7 +99,8 @@ reload() {
 
 	checkconfig
 	msg_reloading "HA-Proxy"
-	daemon /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -st $(</var/run/haproxy.pid)
+	pid=$(cat $pidfile)
+	daemon /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p $pidfile -st $pid
 	RETVAL=$?
 }
 
