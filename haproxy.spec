@@ -18,9 +18,11 @@ Source0:	http://www.haproxy.org/download/1.7/src/%{name}-%{version}.tar.gz
 # Source0-md5:	d0acaae02e444039e11892ea31dde478
 Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
-Source2:	%{name}.init
+Source2:	https://github.com/janeczku/haproxy-acme-validation-plugin/raw/master/acme-http01-webroot.lua
+# Source2-md5:	b68e49e7f7a862d504a4ab335a7cee2a
 Source3:	%{name}.cfg
 Source4:	%{name}-ft.vim
+Source5:	%{name}.init
 URL:		http://www.haproxy.org/
 %{?with_lua:BuildRequires:  lua53-devel}
 %{?with_ssl:BuildRequires:	openssl-devel}
@@ -98,8 +100,10 @@ haproxy.
 %prep
 %setup -q
 
+cp -p %{SOURCE2} .
 mv examples/haproxy.vim .
 mv examples/errorfiles .
+mv doc/gpl.txt .
 
 %build
 regparm_opts=
@@ -128,7 +132,7 @@ regparm_opts="USE_REGPARM=1"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name},%{_datadir}/%{name},/etc/rc.d/init.d} \
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name},%{_datadir}/%{name}/lua,/etc/rc.d/init.d} \
 	$RPM_BUILD_ROOT%{_vimdatadir}/{syntax,ftdetect}
 
 %{__make} install-bin install-man \
@@ -138,15 +142,13 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name},%{_datadir}/%{name},/etc/rc.d/
 
 install -p contrib/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
 install -p contrib/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
-install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install -p %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
 cp -p haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
 cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_vimdatadir}/ftdetect/haproxy.vim
 cp -a errorfiles $RPM_BUILD_ROOT%{_datadir}/%{name}
-
-# Some small cleanups:
-rm -f doc/gpl.txt examples/haproxy.vim
+cp -p acme-http01-webroot.lua $RPM_BUILD_ROOT%{_datadir}/%{name}/lua
 
 %clean
 rm -rf $RPM_BUILD_ROOT
