@@ -1,15 +1,12 @@
 #!/bin/sh
 #
-# haproxy	This shell script takes care of starting and stopping
-#		haproxy.
-#
+# description: HA-Proxy is a TCP/HTTP reverse proxy which is particularly suited \
+#              for high availability environments.
 # chkconfig:	345 80 30
-#
 # description:	haproxy - high-performance TCP/HTTP load balancer
-#
 # processname:	haproxy
-# pidfile:	/var/run/haproxy.pid
 # config:	/etc/haproxy/haproxy.cfg
+# pidfile:	/var/run/haproxy.pid
 
 # Source function library
 . /etc/rc.d/init.d/functions
