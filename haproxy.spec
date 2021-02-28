@@ -85,9 +85,7 @@ Summary:	Vim syntax: haproxy configuration files syntax
 Summary(pl.UTF-8):	Opis składni dla Vima: podświetlanie składni dla plików konfiguracyjnych haproxy
 Group:		Applications/Editors/Vim
 Requires:	vim-rt >= 4:6.3.058-3
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description -n vim-syntax-haproxy
 This plugin provides syntax highlighting for haproxy configuration
