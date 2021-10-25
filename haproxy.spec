@@ -10,12 +10,12 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	1.8.30
+Version:	2.4.7
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
-Source0:	http://www.haproxy.org/download/1.8/src/%{name}-%{version}.tar.gz
-# Source0-md5:	4ce216de30d16217a3510b974b91580c
+Source0:	http://www.haproxy.org/download/2.4/src/%{name}-%{version}.tar.gz
+# Source0-md5:	67d28ee9a39973bf17a38563d39ea81e
 Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
 Source2:	https://github.com/janeczku/haproxy-acme-validation-plugin/raw/master/acme-http01-webroot.lua
@@ -23,6 +23,7 @@ Source2:	https://github.com/janeczku/haproxy-acme-validation-plugin/raw/master/a
 Source3:	%{name}.cfg
 Source4:	%{name}-ft.vim
 Source5:	%{name}.init
+Patch0:		openssl.patch
 URL:		http://www.haproxy.org/
 %{?with_lua:BuildRequires:  lua53-devel}
 %{?with_ssl:BuildRequires:	openssl-devel}
@@ -97,9 +98,9 @@ haproxy.
 
 %prep
 %setup -q
+%patch0 -p1
 
 cp -p %{SOURCE2} .
-mv examples/haproxy.vim .
 mv examples/errorfiles .
 mv doc/gpl.txt .
 
@@ -110,7 +111,7 @@ regparm_opts="USE_REGPARM=1"
 %endif
 
 %{__make} $regparm_opts \
-	TARGET="linux2628" \
+	TARGET="linux-glibc" \
 	CPU="generic" \
 	%{?with_lua:USE_LUA=1 LUA_LIB_NAME=lua5.3 LUA_INC=%{_includedir}/lua5.3} \
 	%{?with_ssl:USE_OPENSSL=1} \
@@ -120,11 +121,15 @@ regparm_opts="USE_REGPARM=1"
 	ADDINC="%{rpmcflags}" \
 	ADDLIB="%{rpmldflags}"
 
-%{__make} -C contrib/halog halog \
+%{__make} admin/halog/halog \
 	CC="%{__cc}" \
 	OPTIMIZE="%{optflags}"
 
-%{__make} -C contrib/iprange iprange \
+%{__make} admin/iprange/iprange \
+	CC="%{__cc}" \
+	OPTIMIZE="%{optflags}"
+
+%{__make} admin/iprange/ip6range \
 	CC="%{__cc}" \
 	OPTIMIZE="%{optflags}"
 
@@ -138,12 +143,14 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name},%{_datadir}/%{name}/lua,/etc/r
 	PREFIX=%{_prefix} \
 	DESTDIR=$RPM_BUILD_ROOT \
 
-install -p contrib/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
-install -p contrib/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
+install -p admin/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
+install -p admin/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
+install -p admin/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/ip6range
+
 install -p %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1
 cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/haproxy.cfg
-cp -p haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
+cp -p admin/syntax-highlight/haproxy.vim $RPM_BUILD_ROOT%{_vimdatadir}/syntax
 cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_vimdatadir}/ftdetect/haproxy.vim
 cp -a errorfiles $RPM_BUILD_ROOT%{_datadir}/%{name}
 cp -p acme-http01-webroot.lua $RPM_BUILD_ROOT%{_datadir}/%{name}/lua
@@ -180,6 +187,7 @@ fi
 %attr(755,root,root) %{_sbindir}/halog
 %attr(755,root,root) %{_sbindir}/haproxy
 %attr(755,root,root) %{_sbindir}/iprange
+%attr(755,root,root) %{_sbindir}/ip6range
 %{_mandir}/man1/halog.1*
 %{_mandir}/man1/haproxy.1*
 %{_datadir}/%{name}
