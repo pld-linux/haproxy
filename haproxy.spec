@@ -7,15 +7,17 @@
 %bcond_without	pcre		# pcre support
 %bcond_without	ssl		# SSL support
 
+%define main_ver %(echo %{version} | cut -f1-2 -d.)
+
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	2.4.21
+Version:	3.4.2
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
-Source0:	http://www.haproxy.org/download/2.4/src/%{name}-%{version}.tar.gz
-# Source0-md5:	c6cd9bc875c068e5ead2a7afbdabccc9
+Source0:	http://www.haproxy.org/download/%{main_ver}/src/%{name}-%{version}.tar.gz
+# Source0-md5:	0855983897e85ad10a9420a3e27607bf
 Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
 Source2:	https://github.com/janeczku/haproxy-acme-validation-plugin/raw/master/acme-http01-webroot.lua
@@ -178,7 +180,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGELOG README ROADMAP examples/* doc/* tests
+%doc CHANGELOG README.md examples/* doc/* tests
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/haproxy.cfg
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
