@@ -12,12 +12,12 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	3.4.2
+Version:	3.4.7
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
-Source0:	http://www.haproxy.org/download/%{main_ver}/src/%{name}-%{version}.tar.gz
-# Source0-md5:	0855983897e85ad10a9420a3e27607bf
+Source0:	https://www.haproxy.org/download/%{main_ver}/src/%{name}-%{version}.tar.gz
+# Source0-md5:	ca89cbc60036eec9671ef3b6fb222759
 Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
 Source2:	https://github.com/janeczku/haproxy-acme-validation-plugin/raw/master/acme-http01-webroot.lua
@@ -25,7 +25,7 @@ Source2:	https://github.com/janeczku/haproxy-acme-validation-plugin/raw/master/a
 Source3:	%{name}.cfg
 Source4:	%{name}-ft.vim
 Source5:	%{name}.init
-URL:		http://www.haproxy.org/
+URL:		https://www.haproxy.org/
 %{?with_lua:BuildRequires:  lua53-devel}
 %{?with_ssl:BuildRequires:	openssl-devel}
 %{?with_pcre:BuildRequires:	pcre-devel}
@@ -105,12 +105,8 @@ mv examples/errorfiles .
 mv doc/gpl.txt .
 
 %build
-regparm_opts=
-%ifarch %{ix86} %{x8664}
-regparm_opts="USE_REGPARM=1"
-%endif
-
-%{__make} $regparm_opts \
+# no rpmcppflags: -DNDEBUG drops the side-effecting assert(ha_sigmask(...)) calls in src/extcheck.c
+%{__make} all admin/halog/halog \
 	TARGET="linux-glibc" \
 	CPU="generic" \
 	%{?with_lua:USE_LUA=1 LUA_LIB_NAME=lua5.3 LUA_INC=%{_includedir}/lua5.3} \
@@ -121,17 +117,10 @@ regparm_opts="USE_REGPARM=1"
 	ADDINC="%{rpmcflags}" \
 	ADDLIB="%{rpmldflags}"
 
-%{__make} admin/halog/halog \
+%{__make} -C admin/iprange \
 	CC="%{__cc}" \
-	OPTIMIZE="%{optflags}"
-
-%{__make} admin/iprange/iprange \
-	CC="%{__cc}" \
-	OPTIMIZE="%{optflags}"
-
-%{__make} admin/iprange/ip6range \
-	CC="%{__cc}" \
-	OPTIMIZE="%{optflags}"
+	OPTIMIZE="%{rpmcflags}" \
+	LDFLAGS="%{rpmldflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -139,13 +128,13 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name},%{_datadir}/%{name}/lua,/etc/r
 	$RPM_BUILD_ROOT%{_vimdatadir}/{syntax,ftdetect}
 
 %{__make} install-bin install-man \
-	TARGET="linux2628" \
+	TARGET="linux-glibc" \
 	PREFIX=%{_prefix} \
 	DESTDIR=$RPM_BUILD_ROOT \
 
 install -p admin/halog/halog $RPM_BUILD_ROOT%{_sbindir}/halog
 install -p admin/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/iprange
-install -p admin/iprange/iprange $RPM_BUILD_ROOT%{_sbindir}/ip6range
+install -p admin/iprange/ip6range $RPM_BUILD_ROOT%{_sbindir}/ip6range
 
 install -p %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1
