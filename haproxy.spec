@@ -7,7 +7,6 @@
 %bcond_without	pcre		# pcre support
 %bcond_without	ssl		# SSL support
 
-%define main_ver %(echo %{version} | cut -f1-2 -d.)
 
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
@@ -16,7 +15,7 @@ Version:	3.4.8
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
-Source0:	https://www.haproxy.org/download/%{main_ver}/src/%{name}-%{version}.tar.gz
+Source0:	https://www.haproxy.org/download/3.4/src/%{name}-%{version}.tar.gz
 # Source0-md5:	497c3d7dfd41b36978f144f2520e4301
 Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
