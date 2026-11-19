@@ -12,12 +12,12 @@
 Summary:	haproxy - high-performance TCP/HTTP load balancer
 Summary(pl.UTF-8):	haproxy - wysoko wydajny load balancer TCP/HTTP
 Name:		haproxy
-Version:	3.4.7
+Version:	3.4.8
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	https://www.haproxy.org/download/%{main_ver}/src/%{name}-%{version}.tar.gz
-# Source0-md5:	ca89cbc60036eec9671ef3b6fb222759
+# Source0-md5:	497c3d7dfd41b36978f144f2520e4301
 Source1:	https://github.com/makinacorpus/haproxy-1.5/raw/master/debian/halog.1
 # Source1-md5:	df4631f3cbc59893a2cd5e4364c9e755
 Source2:	https://github.com/janeczku/haproxy-acme-validation-plugin/raw/master/acme-http01-webroot.lua
